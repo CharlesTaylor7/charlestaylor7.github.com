@@ -6,20 +6,99 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <link rel="stylesheet" type="text/css" href="./index.css">
+    <style>
+      a:link {
+        text-decoration: none;
+      }
+      .header {
+        color: navy;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 45px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        margin-top: 50px;
+      }
+      .layout-row {
+        display: flex;
+        justify-content: center;
+      }
+      .headshot {
+        border-radius: 10%;
+        margin-bottom: 30px;
+      }
+      .headshot-column {
+        display: flex;
+        flex-direction: column;
+        grid-column: 2;
+        text-align: center;
+        margin-right: 30px;
+      }
+      .headshot-column > p {
+        padding: 0px;
+        border: 0px;
+        margin: 2px;
+      }
+      .about {
+        grid-column: 3;
+      }
+      .nav-panel {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+      .nav-button {
+        /* text-decoration: underline; */
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 20px;
+        background: lightskyblue;
+        line-height: 38px;
+        padding: 0px 20px;
+        margin: 0px 2px;
+      }
+      .nav-button:hover {
+        background: rgb(206, 245, 250);
+      }
+      .nav-button > a {
+        color: black;
+        outline: 0;
+      }
+    </style>
     <title>Charles Taylor</title>
   </head>
-  <body style="text-align: center">
-    <h1 id="header">Charles Taylor</h1>
-    <p id="about">
-      I'm a full stack developer & functional programmer
-    </p>
-    <p>
-      <a href="https://github.com/charlestaylor7">GitHub</a>
-    </p>
-    <p>
-      <a href="https://www.linkedin.com/in/charles-taylor-349609133">LinkedIn</a>
-    </p>
-    <p>Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a></p>
+  <body>
+    <p class="header">Charles Taylor</p>
+    <div class="nav-panel">
+      <div class="nav-button">
+        <a href="./index.html">About</a>
+      </div>
+      <div class="nav-button">
+        <a href="./resume.html">Resume</a>
+      </div>
+      <div class="nav-button">
+        <a href="./projects.html">Projects</a>
+      </div>
+    </div>
+    <div class="layout-row">
+      <div class="grid-item headshot-column">
+        <img class="headshot" src="headshot.jpg" width="200px" />
+        <p>
+          <a href="https://www.linkedin.com/in/
+          charles-taylor-349609133">LinkedIn</a>
+        </p>
+        <p>
+          <a href="https://github.com/charlestaylor7">GitHub</a>
+        </p>
+        <p>
+          <a href="mailto:charlestaylor95@gmail.com">Email</a>
+        </p>
+        <!-- <p>
+          Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a>
+        </p> -->
+      </div>
+      <p class="grid-item about">
+        I'm a full stack developer & functional programmer.
+      </p>
+    </div>
   </body>
 </html>
