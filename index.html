@@ -6,22 +6,42 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <link rel="stylesheet" type="text/css" href="./index.css">
+    <style>
+      a:link {
+        text-decoration: none;
+      }
+      body {
+        text-align: center
+      }
+      .header {
+        color: navy;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 45px;
+        font-weight: bold;
+      }
+    </style>
     <title>Charles Taylor</title>
   </head>
-  <body style="text-align: center">
-    <h1 id="header">Charles Taylor</h1>
-    <flexbox >
-      <flexbox style="flex-direction: column">
-        <img src="headshot.jpg" />
+  <body>
+    <p class="header">Charles Taylor</p>
+    <div style="display: grid" >
+      <flexbox class="grid-item" style="flex-direction: column">
+        <img src="headshot.jpg" width="200px" />
         <p>charlestaylor95@gmail.com</p>
-        <a href="https://github.com/charlestaylor7">GitHub</a>
-        <a href="https://www.linkedin.com/in/charles-taylor-349609133">LinkedIn</a>
-  Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a>
+        <p>
+          <a href="https://github.com/charlestaylor7">GitHub</a>
+        </p>
+        <p>
+          <a href="https://www.linkedin.com/in/
+        charles-taylor-349609133">LinkedIn</a>
+        </p>
+        <p>
+          Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a>
+        </p>
       </flexbox>
-      <p id="about">
+      <p id="about" class="grid-item">
         I'm a full stack developer & functional programmer
       </p>
-    </flexbox>
+    </div>
   </body>
 </html>
