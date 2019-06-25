@@ -10,23 +10,41 @@
       a:link {
         text-decoration: none;
       }
-      body {
-        text-align: center
-      }
       .header {
         color: navy;
         font-family: "Times New Roman", Times, serif;
         font-size: 45px;
         font-weight: bold;
+        text-align: center;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        justify-items: end;
+      }
+      .headshot {
+        border-radius: 50%;
+      }
+      .headshot-column {
+        flex-direction: column;
+        grid-column: 2;
+        text-align: center;
+      }
+      .headshot-column > p {
+        padding: 0px;
+        border: 0px;
+      }
+      .about {
+        grid-column: 3;
       }
     </style>
     <title>Charles Taylor</title>
   </head>
   <body>
     <p class="header">Charles Taylor</p>
-    <div style="display: grid" >
-      <flexbox class="grid-item" style="flex-direction: column">
-        <img src="headshot.jpg" width="200px" />
+    <div class="grid">
+      <flexbox class="grid-item headshot-column">
+        <img class="headshot" src="headshot.jpg" width="200px" />
         <p>charlestaylor95@gmail.com</p>
         <p>
           <a href="https://github.com/charlestaylor7">GitHub</a>
@@ -39,7 +57,7 @@
           Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a>
         </p>
       </flexbox>
-      <p id="about" class="grid-item">
+      <p class="grid-item about">
         I'm a full stack developer & functional programmer
       </p>
     </div>
