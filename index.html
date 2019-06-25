@@ -51,14 +51,17 @@
         /* text-decoration: underline; */
         font-family: 'Times New Roman', Times, serif;
         font-size: 20px;
-        background: firebrick;
+        background: lightskyblue;
         line-height: 38px;
         padding: 0px 20px;
         margin: 0px 2px;
       }
       .nav-button:hover {
-        background: violet;
-
+        background: rgb(206, 245, 250);
+      }
+      .nav-button > a {
+        color: black;
+        outline: 0;
       }
     </style>
     <title>Charles Taylor</title>
@@ -66,9 +69,15 @@
   <body>
     <p class="header">Charles Taylor</p>
     <div class="nav-panel">
-      <div class="nav-button">About</div>
-      <div class="nav-button">Resume</div>
-      <div class="nav-button">Projects</div>
+      <div class="nav-button">
+        <a href="./index.html">About</a>
+      </div>
+      <div class="nav-button">
+        <a href="./resume.html">Resume</a>
+      </div>
+      <div class="nav-button">
+        <a href="./projects.html">Projects</a>
+      </div>
     </div>
     <div class="layout-row">
       <div class="grid-item headshot-column">
