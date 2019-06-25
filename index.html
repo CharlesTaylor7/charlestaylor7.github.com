@@ -19,11 +19,12 @@
       }
       .grid {
         display: grid;
-        grid-template-columns: auto auto auto auto;
+        grid-template-columns: auto auto auto auto auto;
         justify-items: end;
       }
       .headshot {
         border-radius: 50%;
+        margin: 10px;
       }
       .headshot-column {
         flex-direction: column;
@@ -33,6 +34,7 @@
       .headshot-column > p {
         padding: 0px;
         border: 0px;
+        margin: 0px;
       }
       .about {
         grid-column: 3;
@@ -45,17 +47,20 @@
     <div class="grid">
       <flexbox class="grid-item headshot-column">
         <img class="headshot" src="headshot.jpg" width="200px" />
-        <p>charlestaylor95@gmail.com</p>
+        <p>
+          <a href="https://www.linkedin.com/in/
+          charles-taylor-349609133">LinkedIn</a>
+        </p>
         <p>
           <a href="https://github.com/charlestaylor7">GitHub</a>
         </p>
         <p>
-          <a href="https://www.linkedin.com/in/
-        charles-taylor-349609133">LinkedIn</a>
+          <a href="mailto:charlestaylor95@gmail.com">Email</a>
         </p>
-        <p>
+
+        <!-- <p>
           Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a>
-        </p>
+        </p> -->
       </flexbox>
       <p class="grid-item about">
         I'm a full stack developer & functional programmer
