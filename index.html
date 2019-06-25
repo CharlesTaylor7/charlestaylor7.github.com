@@ -16,6 +16,8 @@
         font-size: 45px;
         font-weight: bold;
         text-align: center;
+        margin-bottom: 25px;
+        margin-top: 50px;
       }
       .layout-row {
         display: flex;
@@ -40,11 +42,34 @@
       .about {
         grid-column: 3;
       }
+      .nav-panel {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+      .nav-button {
+        /* text-decoration: underline; */
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 20px;
+        background: firebrick;
+        line-height: 38px;
+        padding: 0px 20px;
+        margin: 0px 2px;
+      }
+      .nav-button:hover {
+        background: violet;
+
+      }
     </style>
     <title>Charles Taylor</title>
   </head>
   <body>
     <p class="header">Charles Taylor</p>
+    <div class="nav-panel">
+      <div class="nav-button">About</div>
+      <div class="nav-button">Resume</div>
+      <div class="nav-button">Projects</div>
+    </div>
     <div class="layout-row">
       <div class="grid-item headshot-column">
         <img class="headshot" src="headshot.jpg" width="200px" />
@@ -58,7 +83,6 @@
         <p>
           <a href="mailto:charlestaylor95@gmail.com">Email</a>
         </p>
-
         <!-- <p>
           Projects: <a href="https://charlestaylor7.github.io/arthur-miller">Arthur Miller</a>
         </p> -->
