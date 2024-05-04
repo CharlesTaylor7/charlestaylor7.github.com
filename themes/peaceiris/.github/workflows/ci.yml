@@ -1,0 +1,202 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+  pull_request:
+    paths-ignore:
+      - "README.md"
+  schedule:
+    - cron: "13 13 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  HUGO_CACHEDIR: /tmp/hugo_cache
+
+jobs:
+  renovate:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: peaceiris/workflows/setup-node@v0.19.2
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run test:renovate
+
+  envs:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1
+    permissions: {}
+    outputs:
+      HUGO_VERSION: ${{ steps.envs.outputs.HUGO_VERSION }}
+      NODE_VERSION: ${{ steps.envs.outputs.NODE_VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set envs
+        id: envs
+        run: |
+          echo "HUGO_VERSION=$(make get-hugo-version)" | tee -a "${GITHUB_OUTPUT}"
+          echo "NODE_VERSION=$(cat .nvmrc)" | tee -a "${GITHUB_OUTPUT}"
+
+  deploy:
+    needs: envs
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    permissions:
+      contents: write
+      deployments: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: peaceiris/workflows/setup-hugo@v0.19.2
+        with:
+          node-version: "${{ needs.envs.outputs.NODE_VERSION }}"
+          hugo-version: "${{ needs.envs.outputs.HUGO_VERSION }}"
+          extended: true
+
+      - run: make npm-ci
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: "v1.x"
+
+      - run: make fetch-data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
+      - run: make build-staging
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0.0
+        with:
+          publish-dir: "./exampleSite/public"
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
+
+      - run: make build-prod
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          #deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./exampleSite/public
+          allow_empty_commit: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+
+  lighthouse:
+    needs: deploy
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install lighthouse
+        run: sudo npm i -g lighthouse@11.7.1
+
+      - name: Run lighthouse
+        run: |
+          lighthouse \
+            --chrome-flags="--headless" \
+            --output html --output-path ./report.html \
+            'https://hugothemeiris.peaceiris.com'
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: report.html
+
+      - name: Prepare assets
+        run: |
+          mkdir ./public
+          cp ./report.html ./public/report.html
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./public
+          keep_files: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+
+  docker:
+    needs: envs
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: peaceiris/workflows/setup-hugo@v0.19.2
+        with:
+          node-version: "${{ needs.envs.outputs.NODE_VERSION }}"
+          hugo-version: "${{ needs.envs.outputs.HUGO_VERSION }}"
+          extended: true
+
+      - name: prepare
+        run: |
+          sed -i 's/enableGitInfo: true/# enableGitInfo: true/' exampleSite/config/_default/config.yaml
+
+      - run: make docker-build
+
+  setup:
+    needs: envs
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    if: ${{ github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: peaceiris/workflows/setup-hugo@v0.19.2
+        with:
+          node-version: "${{ needs.envs.outputs.NODE_VERSION }}"
+          hugo-version: "${{ needs.envs.outputs.HUGO_VERSION }}"
+          extended: true
+
+      - uses: peaceiris/workflows/setup-git@v0.19.2
+        with:
+          flags: "--global"
+
+      - name: Create a new Hugo project
+        run: |
+          mkdir ~/homepage
+          cp scripts/setup.sh ~
+          cd ~
+          bash ./setup.sh "homepage" "peaceiris"
+          cd homepage
+          npm ci
+          hugo
