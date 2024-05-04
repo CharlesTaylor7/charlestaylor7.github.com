@@ -21,26 +21,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          targets: wasm32-unknown-unknown
-      - uses: jetli/wasm-pack-action@v0.4.0
+          submodules: true  
+          fetch-depth: 0    
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
         with:
-          version: 'latest'
+          hugo-version: '0.119.0'
+          extended: true
       - name: Build
-        run: |
-          wasm-pack build --target web
-          npm i 
-          npx vite build
+        run: hugo --minify
       - name: Setup Pages
         uses: actions/configure-pages@v3
-        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: 'dist'
-          
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          path: 'public'
+
