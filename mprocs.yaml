@@ -1,3 +1,0 @@
-procs:
-  Hugo:
-    shell: hugo server --buildDrafts
